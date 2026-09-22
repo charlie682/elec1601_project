@@ -33,6 +33,15 @@ int irDistance(int irLedPin, int irReceiverPin)
    return distance;
 }
 
+void turnRight360Deg(int deg){
+  servoLeft.writeMicroseconds(1525);
+  servoRight.writeMicroseconds(1525);
+
+  long time = (long)deg * 5175 / 360;   // multiply before dividing
+  delay(time);
+  stop();
+}
+
 void straight(){
   servoLeft.writeMicroseconds(1375);
   servoRight.writeMicroseconds(1600);
