@@ -25,9 +25,6 @@ int irDetect(int irLedPin, int irReceiverPin, long frequency)
 
 int irDistance(int irLedPin, int irReceiverPin)
 {
-  // front threshold = 5cm;42000
-  // left threshold = 6cm;41500
-  // right threshold = 5.5cm;41700
    int distance = 0;
    for(long f = 38000; f <= 42000; f += 1000)
    {
@@ -36,19 +33,24 @@ int irDistance(int irLedPin, int irReceiverPin)
    return distance;
 }
 
-//confirmed
+void turnRight360Deg(int deg){
+  servoLeft.writeMicroseconds(1525);
+  servoRight.writeMicroseconds(1525);
+
+  long time = (long)deg * 5175 / 360;   // multiply before dividing
+  delay(time);
+  stop();
+}
+
 void straight(){
   servoLeft.writeMicroseconds(1375);
   servoRight.writeMicroseconds(1600);
 }
-
-//confirmed
 void stop(){
   Serial.println("stop");
   servoLeft.writeMicroseconds(1490);
   servoRight.writeMicroseconds(1490);
 }
-
 void turnLeft45Deg(){
   Serial.println("Left45");
   servoLeft.writeMicroseconds(1460);
@@ -56,7 +58,6 @@ void turnLeft45Deg(){
   delay(1000);
   stop();
 }
-
 void turnRight45Deg(){
   Serial.println("Right45");
   servoLeft.writeMicroseconds(1520);
@@ -69,24 +70,14 @@ void turnLeft90Deg(){
   Serial.println("Left90");
   servoLeft.writeMicroseconds(1460);
   servoRight.writeMicroseconds(1460);
-  delay(2000);
+  delay(1350);
   stop();
 }
 void turnRight90Deg(){
   Serial.println("Right90");
-  servoLeft.writeMicroseconds(1520);
-  servoRight.writeMicroseconds(1520);
-  delay(2000);
-  stop();
-}
-
-void turnRightDeg(int deg){
-  long time = (long) deg * 5175 / 360;
-
-  servoLeft.writeMicroseconds(1520);
-  servoRight.writeMicroseconds(1520);
-
-  delay(time);
+  servoLeft.writeMicroseconds(1525);
+  servoRight.writeMicroseconds(1525);
+  delay(1350);
   stop();
 }
 
@@ -112,8 +103,8 @@ int sensorFront;
 void loop()
 {
   //2/5*1023 = 409
-  sensorLeft = irDetect(LeftirLedPin, LeftirReceiverPin, 41500);  // detects wall about 5cm away
-  sensorRight = irDetect(RightirLedPin, RightirReceiverPin, 41700); // detects wall about 5cm away
+  sensorLeft = irDetect(LeftirLedPin, LeftirReceiverPin, 41500); 
+  sensorRight = irDetect(RightirLedPin, RightirReceiverPin, 41700);
   sensorFront = irDetect(FrontirLedPin, FrontirReceiverPin, 40200); // detects the wall from 8 cm
   
   Serial.println(sensorLeft);
