@@ -61,14 +61,14 @@ void turnLeft90Deg(){
   Serial.println("Left90");
   servoLeft.writeMicroseconds(1460);
   servoRight.writeMicroseconds(1460);
-  delay(2000);
+  delay(1350);
   stop();
 }
 void turnRight90Deg(){
   Serial.println("Right90");
-  servoLeft.writeMicroseconds(1520);
-  servoRight.writeMicroseconds(1520);
-  delay(2000);
+  servoLeft.writeMicroseconds(1525);
+  servoRight.writeMicroseconds(1525);
+  delay(1350);
   stop();
 }
 
