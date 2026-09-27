@@ -1,10 +1,17 @@
+DISTANCES AND FREQUENCY CALIBRATION:
+
 8cm from front == frequency of 40200
 5cm from front == frequency of 42000 
 
-6cm from right == freuqnecy of 41700
+
+6cm from right == frequency of 41700
+
 5.5cm from left == frequency of 41500
 
 width of robot with wheel == 11.5cm
 width of sensor == 8cm.
 
 
+
+SPEED and TIME FOR 5cm straight
+330ms. - 1600 left and 1375 right 

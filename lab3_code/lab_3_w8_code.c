@@ -103,37 +103,60 @@ int sensorFront;
 void loop()
 {
   //2/5*1023 = 409
-  sensorLeft = irDetect(LeftirLedPin, LeftirReceiverPin, 41500); 
-  sensorRight = irDetect(RightirLedPin, RightirReceiverPin, 41700);
-  sensorFront = irDetect(FrontirLedPin, FrontirReceiverPin, 40200); // detects the wall from 8 cm
+  // sensorLeft = irDetect(LeftirLedPin, LeftirReceiverPin, 41500); 
+  // sensorRight = irDetect(RightirLedPin, RightirReceiverPin, 41700);
+  // sensorFront = irDetect(FrontirLedPin, FrontirReceiverPin, 40200); // detects the wall from 8 cm
   
-  Serial.println(sensorLeft);
-  Serial.println(sensorRight);
-  Serial.println(sensorFront);
+  // Serial.println(sensorLeft);
+  // Serial.println(sensorRight);
+  // Serial.println(sensorFront);
 
   
-  if (!sensorLeft) {
+  // if (!sensorLeft) {
     
-    //turn left slowly
-    //turnRight90Deg();
-    stop();
-  	delay(3000);
+  //   //turn left slowly
+  //   //turnRight90Deg();
+  //   stop();
+  // 	delay(3000);
     
-  } else if (!sensorRight) {
+  // } else if (!sensorRight) {
     
-    //turn right slowly
-  	stop();
-  	delay(3000);
+  //   //turn right slowly
+  // 	stop();
+  // 	delay(3000);
 
-  } else if (!sensorFront) {
-    stop();
-    // turnLeft90Deg();
-    // turnLeft90Deg();
-    delay(3000);
+  // } else if (!sensorFront) {
+  //   stop();
+  //   // turnLeft90Deg();
+  //   // turnLeft90Deg();
+  //   delay(3000);
+  // }
+  
+  // //continue at medium speed
+  // servoLeft.writeMicroseconds(1600);
+  // servoRight.writeMicroseconds(1375);
+
+  stop();
+
+
+  for (int freq = 38000; freq < 43000; freq += 500) {
+
+    sensorLeft = irDetect(LeftirLedPin, LeftirReceiverPin, freq); 
+    sensorRight = irDetect(RightirLedPin, RightirReceiverPin, freq);
+    sensorFront = irDetect(FrontirLedPin, FrontirReceiverPin, freq); 
+    
+    // prints out current frequency checking for each sensor
+    Serial.print("Frequency: ");
+    Serial.println(freq);
+    Serial.println(sensorLeft);
+    Serial.println(sensorRight);
+    Serial.println(sensorFront);
+
+    delay(10000); //10 second delay to measure distance
+
+    
   }
-  
-  //continue at medium speed
-  servoLeft.writeMicroseconds(1600);
-  servoRight.writeMicroseconds(1375);
 
 }
+
+
