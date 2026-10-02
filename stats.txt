@@ -15,3 +15,14 @@ width of sensor == 8cm.
 
 SPEED and TIME FOR 5cm straight
 330ms. - 1600 left and 1375 right 
+
+
+Take-home board 
+Distance FRONT	Real-edge frequency (Hz)
+1 cm	~52,250–52,750 
+2 cm	~49,750–50,000 
+3 cm	~46,000–46,750
+5 cm	~43,250–43,500
+6 cm	~42,000–42,500
+7 cm	41,000
+8 cm	40,000
