@@ -27,3 +27,21 @@ Distance FRONT	Real-edge frequency (Hz)
 6 cm	~42,000–42,500
 7 cm	41,000
 8 cm	40,000
+
+Distance LEFT	Frequency (Hz)
+3 cm	~55,800
+5 cm	~45,000–45,250
+5.5 cm	~44,000
+6 cm	~43,500–43,750
+7 cm	~42,000–42,250
+8 cm	~41,000–41,250
+
+Distance RIGHT	Frequency (Hz)
+1 cm	55,750
+2 cm	~52,000–52,500
+3 cm	~47,000–47,500
+5 cm	~43,750–44,000
+6 cm	41,900
+7 cm	~41,250–41,500
+8 cm	~40,250–40,500
+9 cm	~39,750–40,000
