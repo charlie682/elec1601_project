@@ -116,16 +116,16 @@ void loop() {
 
     Serial.println("Scenario 5 detected");
 
-    // 4. Rotate anti-clockwise
-    turnAntiClockwise(10);
+    // 4. Rotate clockwise
+    turnClockwise(10);
 
     // 5. Move forward
     straight();
     delay(330);
     stop();
 
-    // 6. Rotate clockwise
-    turnClockwise(10);
+    // 6. Rotate anti-clockwise
+    turnAntiClockwise(10);
 
     // 7. Move backwards
     backward();
