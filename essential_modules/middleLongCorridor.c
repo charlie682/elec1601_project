@@ -20,26 +20,6 @@ const int servoRightPin = 12;
 Servo servoLeft;
 Servo servoRight;
 
-// sensor frequencies
-// These are home values for now
-// Change these to the LAB values tomorrow
-const long leftWallFreq = 44000;  //5.5cm from left == frequency of 41500
-const long rightWallFreq = 41900; //6cm from right == frequency of 41700
-const long frontWallFreq = 40250;
-
-// servo speeds
-const int stopSpeed = 1490;
-
-const int baseLeft = 1600;
-const int baseRight = 1375;
-
-const int correction = 40;
-
-
-// Function for detecting the wall
-// Returns:
-// 0 = wall detected
-// 1 = no wall detected
 int irDetect(int ledPin, int receiverPin, long frequency) {
   tone(irLedPin, frequency);                 // Turn on the IR LED square wave
   delay(1);                                  // Wait 1 ms
@@ -48,6 +28,16 @@ int irDetect(int ledPin, int receiverPin, long frequency) {
   delay(1);                                  // Down time before recheck
   return ir;                                 // Return 0 detect, 1 no detect
 }
+
+const long leftWallFreq = 44000;  //5.5cm from left == frequency of 41500
+const long rightWallFreq = 41900; //6cm from right == frequency of 41700
+const long frontWallFreq = 40250;
+
+// servo speeds
+const int stopSpeed = 1490;
+const int baseLeft = 1600;
+const int baseRight = 1375;
+const int correction = 40;
 
 
 void stop() {
@@ -78,7 +68,6 @@ void setup() {
 
 
 void loop() {
-
   // 1. Check all three sensors
   bool wallOnLeft = (irDetect(leftIrLedPin, leftReceiverPin, leftWallFreq) == 0);
   bool wallOnRight = (irDetect(rightIrLedPin, rightReceiverPin, rightWallFreq) == 0);
@@ -91,6 +80,10 @@ void loop() {
   if (scenario1) {
 
     // Scenario 1 LED
+    // Right = ON
+    // Middle = OFF
+    // Left = OFF
+
     digitalWrite(rightLedPin, HIGH);
     digitalWrite(midLedPin, LOW);
     digitalWrite(leftLedPin, LOW);
@@ -104,7 +97,6 @@ void loop() {
     }
 
     // 5. Right wall detected
-    // Turn away from the right wall
     if (wallOnRight) {
       rightSpeed = baseRight - correction;
     }
@@ -114,9 +106,9 @@ void loop() {
     servoRight.writeMicroseconds(rightSpeed);
   }
 
-
   // 7. Scenario 1 is not detected
   else {
+
     stop();
 
     digitalWrite(rightLedPin, LOW);
