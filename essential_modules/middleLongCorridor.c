@@ -40,16 +40,13 @@ const int correction = 40;
 // Returns:
 // 0 = wall detected
 // 1 = no wall detected
-int checkSensor(int ledPin, int receiverPin, long frequency) {
-  tone(ledPin, frequency);
-  delay(1);
-
-  int result = digitalRead(receiverPin);
-
-  noTone(ledPin);
-  delay(1);
-
-  return result;
+int irDetect(int ledPin, int receiverPin, long frequency) {
+  tone(irLedPin, frequency);                 // Turn on the IR LED square wave
+  delay(1);                                  // Wait 1 ms
+  int ir = digitalRead(irReceiverPin);       // IR receiver -> ir variable
+  noTone(irLedPin);                          // Turn off the IR LED
+  delay(1);                                  // Down time before recheck
+  return ir;                                 // Return 0 detect, 1 no detect
 }
 
 
@@ -83,9 +80,9 @@ void setup() {
 void loop() {
 
   // 1. Check all three sensors
-  bool wallOnLeft = (checkSensor(leftIrLedPin, leftReceiverPin, leftWallFreq) == 0);
-  bool wallOnRight = (checkSensor(rightIrLedPin, rightReceiverPin, rightWallFreq) == 0);
-  bool wallInFront = (checkSensor(midIrLedPin, midReceiverPin, frontWallFreq) == 0);
+  bool wallOnLeft = (irDetect(leftIrLedPin, leftReceiverPin, leftWallFreq) == 0);
+  bool wallOnRight = (irDetect(rightIrLedPin, rightReceiverPin, rightWallFreq) == 0);
+  bool wallInFront = (irDetect(midIrLedPin, midReceiverPin, frontWallFreq) == 0);
   
   // 2. Check if this is Scenario 1
   bool scenario1 = wallOnLeft && wallOnRight && !wallInFront;
