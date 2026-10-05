@@ -114,6 +114,8 @@ void loop() {
     digitalWrite(midLedPin, LOW);
     digitalWrite(leftLedPin, HIGH);
 
+    delay(5000);
+    
     Serial.println("Scenario 5 detected");
 
     // 4. Rotate clockwise
