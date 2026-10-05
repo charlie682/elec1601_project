@@ -88,6 +88,8 @@ void loop() {
     digitalWrite(midLedPin, LOW);
     digitalWrite(leftLedPin, LOW);
 
+    delay(5000); 
+    
     int leftSpeed = baseLeft;
     int rightSpeed = baseRight;
 
