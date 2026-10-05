@@ -133,9 +133,7 @@ void loop() {
     stop();
 
     // 8. Stop after completing Scenario 5
-    while (true) {
-      stop();
-    }
+    stop();
   }
 
   // 9. Scenario 5 is not detected
