@@ -20,7 +20,7 @@ const int servoRightPin = 12;
 Servo servoLeft;
 Servo servoRight;
 
-int irDetect(int ledPin, int receiverPin, long frequency) {
+int irDetect(int irLedPin, int irReceiverPin, long frequency) {
   tone(irLedPin, frequency);                 // Turn on the IR LED square wave
   delay(1);                                  // Wait 1 ms
   int ir = digitalRead(irReceiverPin);       // IR receiver -> ir variable
