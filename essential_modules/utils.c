@@ -29,15 +29,31 @@ int irDistanceCm(int irLedPin, int irReceiverPin)
   if (maxF == 0) return FAR_DIST; // no detecton
 
   // boundary conditiosn on our table
-  if (maxF <= CAL_FREQ[0])         return CAL_DIST[0];
-  if (maxF >= CAL_FREQ[CAL_N - 1]) return CAL_DIST[CAL_N - 1];
+  if (irReceiverPin == FrontirReceiverPin) {
+    if (maxF <= CAL_FREQ_FRONT[0])         return CAL_DIST_FRONT[0];
+    if (maxF >= CAL_FREQ_FRONT[N - 1]) return CAL_DIST_FRONT[N - 1];
+  } else if (irReceiverPin == LeftirReceiverPin) {
+    if (maxF <= CAL_FREQ_LEFT[0])         return CAL_DIST_LEFT[0];
+    if (maxF >= CAL_FREQ_LEFT[N - 1]) return CAL_DIST_LEFT[N - 1];
+  } else if (irReceiverPin == RightirReceiverPin) {
+    if (maxF <= CAL_FREQ_RIGHT[0])         return CAL_DIST_RIGHT[0];
+    if (maxF >= CAL_FREQ_RIGHT[N - 1]) return CAL_DIST_RIGHT[N - 1];
+  }
 
   // choose dist between the calibration points roughly linear estimate 
-  for (int i = 0; i < CAL_N - 1; i++)
-  {
-    if (maxF <= CAL_FREQ[i + 1])
-      return map(maxF, CAL_FREQ[i], CAL_FREQ[i + 1], CAL_DIST[i], CAL_DIST[i + 1]);
+  for (int i = 0; i < 4 - 1; i++) {
+    if (irReceiverPin == FrontirReceiverPin) {
+      if (maxF <= CAL_FREQ_FRONT[i + 1])
+        return map(maxF, CAL_FREQ_FRONT[i], CAL_FREQ_FRONT[i + 1], CAL_DIST_FRONT[i], CAL_DIST_FRONT[i + 1]);
+    } else if (irReceiverPin == LeftirReceiverPin) {
+      if (maxF <= CAL_FREQ_LEFT[i + 1])
+        return map(maxF, CAL_FREQ_LEFT[i], CAL_FREQ_LEFT[i + 1], CAL_DIST_LEFT[i], CAL_DIST_LEFT[i + 1]);
+    } else if (irReceiverPin == RightirReceiverPin) {
+      if (maxF <= CAL_FREQ_RIGHT[i + 1])
+        return map(maxF, CAL_FREQ_RIGHT[i], CAL_FREQ_RIGHT[i + 1], CAL_DIST_RIGHT[i], CAL_DIST_RIGHT[i + 1]);
+    }
   }
+  
   return FAR_DIST;
 }
 

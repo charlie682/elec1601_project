@@ -15,8 +15,16 @@ const int RightredLedPin = A0;
 
 // IR calibration table 
 // currently just placeholders. calibrate on first lab
-const long CAL_FREQ[4] = {38000, 39000, 40000, 41000};  
-const int  CAL_DIST[4] = {10, 8, 5, 3};
+const int N = 4;
+const long CAL_FREQ_FRONT[N] = {38000, 39000, 40000, 41000};  
+const int  CAL_DIST_FRONT[N] = {10, 8, 5, 3};
+
+const long CAL_FREQ_LEFT[N] = {38000, 39000, 40000, 41000};  
+const int  CAL_DIST_LEFT[N] = {10, 8, 5, 3};
+
+const long CAL_FREQ_RIGHT[N] = {38000, 39000, 40000, 41000};  
+const int  CAL_DIST_RIGHT[N] = {10, 8, 5, 3};
+
 const int FAR_DIST = 99; // returned when we dont detect any wall 
 
 // IR distance
