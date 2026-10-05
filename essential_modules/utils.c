@@ -1,3 +1,45 @@
+#include "utils.h"
+
+// IR distance  
+
+int irDetect(int irLedPin, int irReceiverPin, long frequency)
+{
+  tone(irLedPin, frequency);                 // Turn on the IR LED square wave
+  delay(1);                                  // Wait 1 ms
+  int ir = digitalRead(irReceiverPin);       // IR receiver -> ir variable
+  noTone(irLedPin);                          // Turn off the IR LED
+  delay(1);                                  // Down time before recheck
+  return ir;                                 // Return 0 detect, 1 no detect
+}
+
+int irDistanceCm(int irLedPin, int irReceiverPin)
+{
+  long maxF = 0;
+
+  // Scan from high to low so we get closest dist first 
+  for (long f = 42000; f >= 38000; f -= 500)
+  {
+    if (irDetect(irLedPin, irReceiverPin, f) == 0)
+    {
+      maxF = f;
+      break;
+    }
+  }
+
+  if (maxF == 0) return FAR_DIST; // no detecton
+
+  // boundary conditiosn on our table
+  if (maxF <= CAL_FREQ[0])         return CAL_DIST[0];
+  if (maxF >= CAL_FREQ[CAL_N - 1]) return CAL_DIST[CAL_N - 1];
+
+  // choose dist between the calibration points roughly linear estimate 
+  for (int i = 0; i < CAL_N - 1; i++)
+  {
+    if (maxF <= CAL_FREQ[i + 1])
+      return map(maxF, CAL_FREQ[i], CAL_FREQ[i + 1], CAL_DIST[i], CAL_DIST[i + 1]);
+  }
+  return FAR_DIST;
+}
 
 // LED controls 
 
@@ -8,7 +50,6 @@ void LEDSwitch(int irLedPin, long frequency, int state) {
         noTone(irLedPin);
     }
 }
-
 
 // Servo controls 
 
