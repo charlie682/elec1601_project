@@ -14,14 +14,25 @@ void setup() {
   Serial.begin(9600);
   servoLeft.attach(9); 
   servoRight.attach(5); 
-  straight();
-  delay(2000);
+
+  pinMode(LeftirReceiverPin, INPUT);
+  pinMode(FrontirReceiverPin, INPUT);
+  pinMode(RightirReceiverPin, INPUT);
+
+  pinMode(LeftredLedPin, OUTPUT);
+  pinMode(FrontredLedPin, OUTPUT);
+  pinMode(RightredLedPin, OUTPUT);
+
 }
 
 // get sensor data
 // still need to create our own scenarios 
 
 void loop() {
+  delay(3000);
+  straight();
+  delay(10000);
+
   int dF = irDistanceCm(FrontirLedPin, FrontirReceiverPin);
   int dL = irDistanceCm(LeftirLedPin,  LeftirReceiverPin);
   int dR = irDistanceCm(RightirLedPin, RightirReceiverPin);
