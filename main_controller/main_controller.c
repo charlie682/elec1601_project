@@ -27,18 +27,18 @@ void loop() {
 
     // dead end
     if (dF < max_front_turn && (dL < 8) && (dR < 8)) {
-      deadend(); 
+      deadEnd(); 
     // bad parallel right 
-    } else if ((dF > 7) && (dL > 6) && (dR < 4))) {
+    } else if ((dF > 7) && (dL > 6) && (dR < 4)) {
       badRightParallel();
     // bad parallel left
-    } else if ((dF > 7) && (dL < 4) && (dR > 6))) {
+    } else if ((dF > 7) && (dL < 4) && (dR > 6)) {
       badLeftParallel();
     // bad 30deg right
-    } else if ((dF < 5) && (dL > 6) && (dR < 4))) {
+    } else if ((dF < 5) && (dL > 6) && (dR < 4)) {
       badRight30Deg();
     // bad 30deg left
-    } else if ((dF < 5) && (dL < 4) && (dR > 6))) {
+    } else if ((dF < 5) && (dL < 4) && (dR > 6)) {
       badLeft30Deg();
     // ideal right turn
     } else if ((dF < max_front_turn) && (dL < 8) && (dR > 10)) {

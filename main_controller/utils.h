@@ -5,6 +5,8 @@ ifndef UTILS_H
 #include <Servo.h>
 #include <Wire.h>
 
+extern Servo servoLeft, servoRight;
+
 // pins 
 const int FrontirLedPin=6, FrontirReceiverPin=7;   // Select these to match the IR LED/receiver pair that you are using
 const int FrontredLedPin = A1;                    // Select this to match the red LED next to the IR receiver you are using
