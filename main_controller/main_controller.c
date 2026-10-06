@@ -1,5 +1,7 @@
-#include "essential_modules/utils.h"
-#include "essential_modules/essential_modules.h"
+#include "utils.h"
+#include "essential_modules.h"
+#include <Arduino.h>
+#include <Servo.h>
 
 Servo servoLeft; 
 Servo servoRight; 

@@ -1,4 +1,4 @@
-ifndef UTILS_H
+#ifndef UTILS_H
 #define UTILS_H
 
 #include <Arduino.h>
@@ -61,4 +61,4 @@ void turnLeft180Deg();
 
 void turnRight180Deg();
 
-endif
+#endif
