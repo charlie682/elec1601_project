@@ -1,5 +1,3 @@
-#include <ELEC1601_TakeHomeBoard.h>
-
 const int FrontirLedPin=6, FrontirReceiverPin=7;
 const int LeftirLedPin=10, LeftirReceiverPin=11;
 const int RightirLedPin=2, RightirReceiverPin=3;
@@ -53,7 +51,10 @@ void loop()
     hitYet[i] = false; firstDone[i] = false; stopped[i] = false; missRun[i] = 0;
   }
 
-  for (long freq = 30000; freq <= 56000; freq += 250) {   // widened to catch far/close edges
+  // Lab robot's values sit lower than the take-home board's did,
+  // so this range is narrower (faster sweep). Widen it if you get
+  // "none" at a distance where you expect a real reading.
+  for (long freq = 34000; freq <= 46000; freq += 250) {
 
     int reading[3];
     reading[0] = irDetect(LeftirLedPin,  LeftirReceiverPin,  freq);
