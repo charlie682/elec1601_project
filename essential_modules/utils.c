@@ -92,6 +92,11 @@ void straight(){
   servoRight.writeMicroseconds(1600);
 }
 
+void backward() {
+  servoLeft.writeMicroseconds(1600);
+  servoRight.writeMicroseconds(1375);
+}
+
 void stop(){
   Serial.println("stop");
   servoLeft.writeMicroseconds(1490);
