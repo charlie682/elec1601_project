@@ -1,5 +1,5 @@
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef UTILS_HPP
+#define UTILS_HPP
 
 #include <Arduino.h>
 #include <Servo.h>
@@ -33,7 +33,7 @@ const int FAR_DIST = 99; // returned when we dont detect any wall
 
 int irDetect(int irLedPin, int irReceiverPin, long frequency);
 
-int irDistance(int irLedPin, int irReceiverPin);
+int irDistanceCm(int irLedPin, int irReceiverPin);
 
 // LED controls
 
@@ -42,6 +42,8 @@ void LEDSwitch(int irLedPin, long frequency, int state);
 // Servo controls
 
 void straight();
+
+void backward();
 
 void stop();
 

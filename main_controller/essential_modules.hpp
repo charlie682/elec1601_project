@@ -1,5 +1,5 @@
-#ifndef ESSENTIAL_MODULES_H
-#define ESSENTIAL_MODULES_H
+#ifndef ESSENTIAL_MODULES_HPP
+#define ESSENTIAL_MODULES_HPP
 
 // 0
 void unknown();
