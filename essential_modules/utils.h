@@ -15,15 +15,15 @@ const int RightredLedPin = A0;
 
 // IR calibration table 
 // currently just placeholders. calibrate on first lab
-const int N = 4;
-const long CAL_FREQ_FRONT[N] = {38000, 39000, 40000, 41000};  
-const int  CAL_DIST_FRONT[N] = {10, 8, 5, 3};
+const int N = 6;
+const long CAL_FREQ_FRONT[N] = {38500, 40000, 41000, 42000, 45750, 46000};  
+const int  CAL_DIST_FRONT[N] = {10, 8, 6, 5, 3, 1.5};
 
-const long CAL_FREQ_LEFT[N] = {38000, 39000, 40000, 41000};  
-const int  CAL_DIST_LEFT[N] = {10, 8, 5, 3};
+const long CAL_FREQ_LEFT[N] = {38500, 39000, 40750, 41500, 45250, 48750};  
+const int  CAL_DIST_LEFT[N] = {10, 8, 6, 5, 3, 1.5};
 
-const long CAL_FREQ_RIGHT[N] = {38000, 39000, 40000, 41000};  
-const int  CAL_DIST_RIGHT[N] = {10, 8, 5, 3};
+const long CAL_FREQ_RIGHT[N] = {37750, 39250, 45000, 41500, 44500, 48500};  
+const int  CAL_DIST_RIGHT[N] = {10, 8, 6, 5, 3, 1.5};
 
 const int FAR_DIST = 99; // returned when we dont detect any wall 
 
@@ -32,7 +32,6 @@ const int FAR_DIST = 99; // returned when we dont detect any wall
 int irDetect(int irLedPin, int irReceiverPin, long frequency);
 
 int irDistance(int irLedPin, int irReceiverPin);
-
 
 // LED controls
 
