@@ -1,6 +1,7 @@
 #include "utils.hpp"
 #include "essential_modules.hpp"
 
+
 // IR distance  
 
 int irDetect(int irLedPin, int irReceiverPin, long frequency)
@@ -18,7 +19,7 @@ int irDistanceCm(int irLedPin, int irReceiverPin)
   long maxF = 0;
 
   // Scan from high to low so we get closest dist first 
-  for (long f = 42000; f >= 38000; f -= 500)
+  for (long f = 49000; f >= 37000; f -= 500)
   {
     if (irDetect(irLedPin, irReceiverPin, f) == 0)
     {
@@ -42,7 +43,7 @@ int irDistanceCm(int irLedPin, int irReceiverPin)
   }
 
   // choose dist between the calibration points roughly linear estimate 
-  for (int i = 0; i < 4 - 1; i++) {
+  for (int i = 0; i < N - 1; i++) {
     if (irReceiverPin == FrontirReceiverPin) {
       if (maxF <= CAL_FREQ_FRONT[i + 1])
         return map(maxF, CAL_FREQ_FRONT[i], CAL_FREQ_FRONT[i + 1], CAL_DIST_FRONT[i], CAL_DIST_FRONT[i + 1]);
@@ -99,13 +100,11 @@ void backward() {
 }
 
 void stop(){
-  Serial.println("stop");
   servoLeft.writeMicroseconds(1490);
   servoRight.writeMicroseconds(1490);
 }
 
 void turnLeft45Deg(){
-  Serial.println("Left45");
   servoLeft.writeMicroseconds(1460);
   servoRight.writeMicroseconds(1460);
   delay(1000);
@@ -113,7 +112,6 @@ void turnLeft45Deg(){
 }
 
 void turnRight45Deg(){
-  Serial.println("Right45");
   servoLeft.writeMicroseconds(1520);
   servoRight.writeMicroseconds(1520);
   delay(1000);
@@ -121,7 +119,6 @@ void turnRight45Deg(){
 }
 
 void turnLeft90Deg(){
-  Serial.println("Left90");
   servoLeft.writeMicroseconds(1460);
   servoRight.writeMicroseconds(1460);
   delay(1350);
@@ -129,7 +126,7 @@ void turnLeft90Deg(){
 }
 
 void turnRight90Deg(){
-  Serial.println("Right90");
+
   servoLeft.writeMicroseconds(1525);
   servoRight.writeMicroseconds(1525);
   delay(1350);
@@ -137,7 +134,7 @@ void turnRight90Deg(){
 }
 
 void turnLeft180Deg(){
-  Serial.println("Left180");
+
   servoLeft.writeMicroseconds(1490);
   servoRight.writeMicroseconds(1490);
   delay(5000);
@@ -145,7 +142,7 @@ void turnLeft180Deg(){
 }
 
 void turnRight180Deg(){
-  Serial.println("Right180");
+
   servoLeft.writeMicroseconds(1490);
   servoRight.writeMicroseconds(1490);
   delay(5000);

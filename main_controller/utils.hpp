@@ -5,6 +5,7 @@
 #include <Servo.h>
 #include <Wire.h>
 
+
 extern Servo servoLeft, servoRight;
 
 // pins 
@@ -16,16 +17,15 @@ const int RightirLedPin=2, RightirReceiverPin=3;   // Select these to match the 
 const int RightredLedPin = A0;
 
 // IR calibration table 
-// currently just placeholders. calibrate on first lab
-const int N = 6;
-const long CAL_FREQ_FRONT[N] = {38500, 40000, 41000, 42000, 45750, 46000};  
-const int  CAL_DIST_FRONT[N] = {10, 8, 6, 5, 3, 1.5};
+const int N = 5;
+const long CAL_FREQ_FRONT[N] = {38500, 40000, 41000, 42000, 45750};  
+const int  CAL_DIST_FRONT[N] = {10, 8, 6, 5, 3}; //1.5 46000
 
-const long CAL_FREQ_LEFT[N] = {38500, 39000, 40750, 41500, 45250, 48750};  
-const int  CAL_DIST_LEFT[N] = {10, 8, 6, 5, 3, 1.5};
+const long CAL_FREQ_LEFT[N] = {38500, 39000, 40750, 41500, 45250};  
+const int  CAL_DIST_LEFT[N] = {10, 8, 6, 5, 3}; //1.5 48750
 
-const long CAL_FREQ_RIGHT[N] = {37750, 39250, 45000, 41500, 44500, 48500};  
-const int  CAL_DIST_RIGHT[N] = {10, 8, 6, 5, 3, 1.5};
+const long CAL_FREQ_RIGHT[N] = {37750, 39250, 40500, 41500, 44500};  
+const int  CAL_DIST_RIGHT[N] = {10, 8, 6, 5, 3}; //1.5 48500
 
 const int FAR_DIST = 99; // returned when we dont detect any wall 
 
