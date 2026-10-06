@@ -132,6 +132,7 @@ void badRight30Deg() {
 
     int i = 0;
     while (i < 3) {
+        i++;
         int d0 = irDistanceCm(RightirLedPin, RightirReceiverPin); //distance 
 
         straight();
@@ -149,7 +150,6 @@ void badRight30Deg() {
         else if (d1 - d0 > 1) turnRightXDeg(8); // over angled
         else break; // essentially parallel 
 
-        i++;
     }
 
     straight();
@@ -169,6 +169,7 @@ void badLeft30Deg() {
 
     int i = 0;
     while (i < 3) {
+        i++;
         int d0 = irDistanceCm(LeftirLedPin, LeftirReceiverPin); //distance 
 
         straight();
@@ -186,7 +187,6 @@ void badLeft30Deg() {
         else if (d1 - d0 > 1) turnLeftXDeg(8); // over angled
         else break; // essentially parallel 
 
-        i++;
     }
 
     straight();
