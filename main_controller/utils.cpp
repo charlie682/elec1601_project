@@ -1,7 +1,6 @@
 #include "utils.hpp"
 #include "essential_modules.hpp"
 
-
 // IR distance  
 
 int irDetect(int irLedPin, int irReceiverPin, long frequency)

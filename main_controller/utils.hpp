@@ -5,8 +5,8 @@
 #include <Servo.h>
 #include <Wire.h>
 
-
-extern Servo servoLeft, servoRight;
+extern Servo servoLeft; 
+extern Servo servoRight; 
 
 // pins 
 const int FrontirLedPin=6, FrontirReceiverPin=7;   // Select these to match the IR LED/receiver pair that you are using
