@@ -162,9 +162,9 @@ void badLeft30Deg() {
     // LED mid: on
     // LED left: on
 
-    LEDSwitch(RightirLedPin, 38000, 0); 
-    LEDSwitch(FrontirLedPin, 38000, 0);
-    LEDSwitch(LeftirLedPin, 38000, 0);
+    LEDSwitch(RightirLedPin, 38000, 1); 
+    LEDSwitch(FrontirLedPin, 38000, 1);
+    LEDSwitch(LeftirLedPin, 38000, 1);
 
     turnRightXDeg(20);
 
