@@ -1,150 +1,91 @@
 #include "utils.hpp"
-#include "essential_modules.hpp"
 
-// IR distance  
-
+// ---------- SENSING ----------
 int irDetect(int irLedPin, int irReceiverPin, long frequency)
 {
-  tone(irLedPin, frequency);                 // Turn on the IR LED square wave
-  delay(1);                                  // Wait 1 ms
-  int ir = digitalRead(irReceiverPin);       // IR receiver -> ir variable
-  noTone(irLedPin);                          // Turn off the IR LED
-  delay(1);                                  // Down time before recheck
-  return ir;                                 // Return 0 detect, 1 no detect
+  tone(irLedPin, frequency);
+  delay(1);
+  int ir = digitalRead(irReceiverPin);   // 0 = detect, 1 = no detect
+  noTone(irLedPin);
+  delay(1);
+  return ir;
 }
 
+// Sweep from high freq (close) to low freq (far). The first frequency that
+// still "sees" the wall tells us how close it is, then we convert via the table.
 int irDistanceCm(int irLedPin, int irReceiverPin)
 {
+  const long *freqs;
+  const int  *dists;
+  if (irReceiverPin == FrontirReceiverPin)     { freqs = CAL_FREQ_FRONT; dists = CAL_DIST_FRONT; }
+  else if (irReceiverPin == LeftirReceiverPin) { freqs = CAL_FREQ_LEFT;  dists = CAL_DIST_LEFT; }
+  else                                         { freqs = CAL_FREQ_RIGHT; dists = CAL_DIST_RIGHT; }
+
   long maxF = 0;
-
-  // Scan from high to low so we get closest dist first 
-  for (long f = 49000; f >= 37000; f -= 500)
-  {
-    if (irDetect(irLedPin, irReceiverPin, f) == 0)
-    {
-      maxF = f;
-      break;
-    }
+  for (long f = 49000; f >= 37000; f -= 500) {
+    if (irDetect(irLedPin, irReceiverPin, f) == 0) { maxF = f; break; }
   }
+  if (maxF == 0) return FAR_DIST;
 
-  if (maxF == 0) return FAR_DIST; // no detecton
+  if (maxF <= freqs[0])     return dists[0];
+  if (maxF >= freqs[N - 1]) return dists[N - 1];
 
-  // boundary conditiosn on our table
-  if (irReceiverPin == FrontirReceiverPin) {
-    if (maxF <= CAL_FREQ_FRONT[0])         return CAL_DIST_FRONT[0];
-    if (maxF >= CAL_FREQ_FRONT[N - 1]) return CAL_DIST_FRONT[N - 1];
-  } else if (irReceiverPin == LeftirReceiverPin) {
-    if (maxF <= CAL_FREQ_LEFT[0])         return CAL_DIST_LEFT[0];
-    if (maxF >= CAL_FREQ_LEFT[N - 1]) return CAL_DIST_LEFT[N - 1];
-  } else if (irReceiverPin == RightirReceiverPin) {
-    if (maxF <= CAL_FREQ_RIGHT[0])         return CAL_DIST_RIGHT[0];
-    if (maxF >= CAL_FREQ_RIGHT[N - 1]) return CAL_DIST_RIGHT[N - 1];
-  }
-
-  // choose dist between the calibration points roughly linear estimate 
   for (int i = 0; i < N - 1; i++) {
-    if (irReceiverPin == FrontirReceiverPin) {
-      if (maxF <= CAL_FREQ_FRONT[i + 1])
-        return map(maxF, CAL_FREQ_FRONT[i], CAL_FREQ_FRONT[i + 1], CAL_DIST_FRONT[i], CAL_DIST_FRONT[i + 1]);
-    } else if (irReceiverPin == LeftirReceiverPin) {
-      if (maxF <= CAL_FREQ_LEFT[i + 1])
-        return map(maxF, CAL_FREQ_LEFT[i], CAL_FREQ_LEFT[i + 1], CAL_DIST_LEFT[i], CAL_DIST_LEFT[i + 1]);
-    } else if (irReceiverPin == RightirReceiverPin) {
-      if (maxF <= CAL_FREQ_RIGHT[i + 1])
-        return map(maxF, CAL_FREQ_RIGHT[i], CAL_FREQ_RIGHT[i + 1], CAL_DIST_RIGHT[i], CAL_DIST_RIGHT[i + 1]);
-    }
+    if (maxF <= freqs[i + 1])
+      return map(maxF, freqs[i], freqs[i + 1], dists[i], dists[i + 1]);
   }
-  
   return FAR_DIST;
 }
 
-// LED controls 
-
-void LEDSwitch(int irLedPin, long frequency, int state) {
-    if (state) {
-        tone(irLedPin, frequency); 
-    } else {
-        noTone(irLedPin);
-    }
+// ---------- INDICATOR LEDS ----------
+// These drive the RED LEDs. (The old LEDSwitch drove the IR emitters, which
+// showed nothing AND could blind the receivers.)
+void setLeds(bool left, bool mid, bool right)
+{
+  digitalWrite(LeftredLedPin,  left  ? HIGH : LOW);
+  digitalWrite(FrontredLedPin, mid   ? HIGH : LOW);
+  digitalWrite(RightredLedPin, right ? HIGH : LOW);
 }
 
-// Servo controls 
-
-void turnRightXDeg(int deg){
-  servoLeft.writeMicroseconds(1525);
-  servoRight.writeMicroseconds(1525);
-
-  long time = (long)deg * 5175 / 360;   // multiply before dividing
-  delay(time);
-  stop();
+void blinkLed(int pin, int times)
+{
+  for (int i = 0; i < times; i++) {
+    digitalWrite(pin, HIGH); delay(150);
+    digitalWrite(pin, LOW);  delay(150);
+  }
 }
 
-void turnLeftXDeg(int deg){
-  servoLeft.writeMicroseconds(1450); // NEEDS CHANGING and fixing!
-  servoRight.writeMicroseconds(1450);
-
-  long time = (long)deg * 5175 / 360;   // multiply before dividing
-  delay(time);
-  stop();
+// ---------- MOVEMENT ----------
+void stop() {
+  servoLeft.writeMicroseconds(STOP_US);
+  servoRight.writeMicroseconds(STOP_US);
 }
 
-void straight(){
-  servoLeft.writeMicroseconds(1375);
-  servoRight.writeMicroseconds(1600);
+void straight() {
+  servoLeft.writeMicroseconds(FWD_LEFT_US);
+  servoRight.writeMicroseconds(FWD_RIGHT_US);
 }
 
 void backward() {
-  servoLeft.writeMicroseconds(1600);
-  servoRight.writeMicroseconds(1375);
+  servoLeft.writeMicroseconds(FWD_RIGHT_US);   // mirror of straight()
+  servoRight.writeMicroseconds(FWD_LEFT_US);
 }
 
-void stop(){
-  servoLeft.writeMicroseconds(1490);
-  servoRight.writeMicroseconds(1490);
-}
+void driveMs(int ms)   { straight(); delay(ms); stop(); delay(SETTLE_MS); }
+void reverseMs(int ms) { backward(); delay(ms); stop(); delay(SETTLE_MS); }
 
-void turnLeft45Deg(){
-  servoLeft.writeMicroseconds(1460);
-  servoRight.writeMicroseconds(1460);
-  delay(1000);
+void turnRightXDeg(int deg) {
+  servoLeft.writeMicroseconds(TURN_CW_US);
+  servoRight.writeMicroseconds(TURN_CW_US);
+  delay((long)deg * MS_PER_360 / 360);   // multiply before dividing
   stop();
+  delay(SETTLE_MS);
 }
 
-void turnRight45Deg(){
-  servoLeft.writeMicroseconds(1520);
-  servoRight.writeMicroseconds(1520);
-  delay(1000);
+void turnLeftXDeg(int deg) {
+  servoLeft.writeMicroseconds(TURN_CCW_US);
+  servoRight.writeMicroseconds(TURN_CCW_US);
+  delay((long)deg * MS_PER_360 / 360);
   stop();
+  delay(SETTLE_MS);
 }
-
-void turnLeft90Deg(){
-  servoLeft.writeMicroseconds(1460);
-  servoRight.writeMicroseconds(1460);
-  delay(1350);
-  stop();
-}
-
-void turnRight90Deg(){
-
-  servoLeft.writeMicroseconds(1525);
-  servoRight.writeMicroseconds(1525);
-  delay(1350);
-  stop();
-}
-
-void turnLeft180Deg(){
-
-  servoLeft.writeMicroseconds(1490);
-  servoRight.writeMicroseconds(1490);
-  delay(5000);
-  stop();
-}
-
-void turnRight180Deg(){
-
-  servoLeft.writeMicroseconds(1490);
-  servoRight.writeMicroseconds(1490);
-  delay(5000);
-  stop();
-}
-

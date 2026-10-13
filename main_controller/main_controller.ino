@@ -3,8 +3,6 @@
 #include <Arduino.h>
 #include <Servo.h>
 
-// constants 
-const int min_front_turn = 3;
 const int max_front_turn = 8;
 
 Servo servoLeft;
@@ -12,34 +10,43 @@ Servo servoRight;
 
 void setup() {
   Serial.begin(9600);
-  servoLeft.attach(9); 
-  servoRight.attach(5); 
-  straight();
-  delay(2000);
+  servoLeft.attach(SERVO_LEFT_PIN);
+  servoRight.attach(SERVO_RIGHT_PIN);
+  stop();
+
+  pinMode(LeftirReceiverPin, INPUT);
+  pinMode(FrontirReceiverPin, INPUT);
+  pinMode(RightirReceiverPin, INPUT);
+
+  pinMode(LeftredLedPin, OUTPUT);
+  pinMode(FrontredLedPin, OUTPUT);
+  pinMode(RightredLedPin, OUTPUT);
+  setLeds(false, false, false);
+
+  delay(3000);   // time to put the robot down
 }
 
-// get sensor data
-// still need to create our own scenarios 
-
+// SENSE -> CLASSIFY -> ACT -> (stopped) -> repeat
 void loop() {
+  stop();
   int dF = irDistanceCm(FrontirLedPin, FrontirReceiverPin);
   int dL = irDistanceCm(LeftirLedPin,  LeftirReceiverPin);
   int dR = irDistanceCm(RightirLedPin, RightirReceiverPin);
-  Serial.println(dF);
-  Serial.println(dL);
-  Serial.println(dR);
 
-  if (dF > 7 && dL > 6 && dR < 4)               badRightParallel();
-  else if (dF > 7 && dL < 4 && dR > 6)          badLeftParallel();
-  else if (dF < 5 && dL > 6 && dR < 4)          badRight30Deg();
-  else if (dF < 5 && dL < 4 && dR > 6)          badLeft30Deg();
-  else if (dF < max_front_turn && dL < 8 && dR < 8) deadEnd();
-  else if (dF < max_front_turn && dL < 8 && dR > 10) idealRightTurn();
-  else if (dF < max_front_turn && dL > 10 && dR < 8) idealLeftTurn();
-  else if (dF > 7 && dL > 4 && dL < 7 && dR > 4 && dR < 7) middleLongCorridor();
-  else unknown();
+  Serial.print("F="); Serial.print(dF);
+  Serial.print(" L="); Serial.print(dL);
+  Serial.print(" R="); Serial.print(dR);
+  Serial.print("  -> ");
 
-  delay(2000);
+  if      (dF > 7 && dL > 6 && dR < 4)                      { Serial.println("badRightParallel"); badRightParallel(); }
+  else if (dF > 7 && dL < 4 && dR > 6)                      { Serial.println("badLeftParallel");  badLeftParallel(); }
+  else if (dF < 5 && dL > 6 && dR < 4)                      { Serial.println("badRight30Deg");    badRight30Deg(); }
+  else if (dF < 5 && dL < 4 && dR > 6)                      { Serial.println("badLeft30Deg");     badLeft30Deg(); }
+  else if (dF < max_front_turn && dL < 8 && dR < 8)         { Serial.println("deadEnd");          deadEnd(); }
+  else if (dF < max_front_turn && dL < 8 && dR > 10)        { Serial.println("idealRightTurn");   idealRightTurn(); }
+  else if (dF < max_front_turn && dL > 10 && dR < 8)        { Serial.println("idealLeftTurn");    idealLeftTurn(); }
+  else if (dF > 7 && dL > 4 && dL < 7 && dR > 4 && dR < 7) { Serial.println("middleLongCorridor"); middleLongCorridor(); }
+  else                                                      { Serial.println("unknown");          unknown(); }
+
+  delay(200);
 }
-
-
