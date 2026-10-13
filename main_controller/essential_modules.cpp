@@ -6,9 +6,7 @@ void unknown() {
     //LED mid: OFF
     //LED left: OFF
 
-    LEDSwitch(RightirLedPin, 38000, 0);
-    LEDSwitch(FrontirLedPin, 38000, 0);
-    LEDSwitch(LeftirLedPin, 38000, 0);
+    displayCode(LED_OFF, LED_OFF, LED_OFF);
 
     stop();
 }
@@ -18,12 +16,9 @@ void middleLongCorridor() {
     // LED mid: off
     // LED left: off
 
-    LEDSwitch(RightirLedPin, 38000, 1);
-    LEDSwitch(FrontirLedPin, 38000, 0);
-    LEDSwitch(LeftirLedPin, 38000, 0);
+    displayCode(LED_ON, LED_OFF, LED_OFF);
 
-    straight();
-    delay(500); // will need checking
+    forwardMs(300);
 }
 
 void idealLeftTurn() {
@@ -31,14 +26,11 @@ void idealLeftTurn() {
     // LED mid: on
     // LED left: off
 
-    LEDSwitch(RightirLedPin, 38000, 0);
-    LEDSwitch(FrontirLedPin, 38000, 1);
-    LEDSwitch(LeftirLedPin, 38000, 0);
+    displayCode(LED_ON, LED_ON, LED_OFF);
 
     turnLeftXDeg(90);
 
-    straight();
-    delay(1500); // 1.5 seconds but will need checking 
+    forwardMs(300); 
 }
 
 
@@ -47,14 +39,12 @@ void idealRightTurn() {
     // LED mid: on
     // LED left: off
 
-    LEDSwitch(RightirLedPin, 38000, 0);
-    LEDSwitch(FrontirLedPin, 38000, 1);
-    LEDSwitch(LeftirLedPin, 38000, 0);
+    displayCode(LED_OFF, LED_ON, LED_OFF);
+
 
     turnRightXDeg(90);
 
-    straight();
-    delay(1500); // 1.5 seconds but will need checking 
+    forwardMs(300);
 }
 
 void deadEnd() {
@@ -62,14 +52,12 @@ void deadEnd() {
     //LED mid: OFF
     //LED left: ON
 
-    LEDSwitch(RightirLedPin, 38000, 0);
-    LEDSwitch(FrontirLedPin, 38000, 0);
-    LEDSwitch(LeftirLedPin, 38000, 1);
+    displayCode(LED_OFF, LED_OFF, LED_ON);
+
 
     turnRightXDeg(180);
 
-    straight();
-    delay(1500); // 1.5 seconds but will need checking
+    forwardMs(330); 
 }
 
 void badRightParallel() {
@@ -77,23 +65,20 @@ void badRightParallel() {
     // LED mid: on
     // LED left: on
 
-    LEDSwitch(RightirLedPin, 38000, 0); 
-    LEDSwitch(FrontirLedPin, 38000, 1);
-    LEDSwitch(LeftirLedPin, 38000, 1);
+    displayCode(LED_OFF, LED_ON, LED_ON);
 
     // clockwise
     turnLeftXDeg(10);
 
     // straight
     straight();
-    delay(300);
+    delay(50);
 
     // anti-clockwise
     turnRightXDeg(10);
 
     // backward
-    backward();
-    delay(300);
+    backwardMs(100);   
 }
 
 void badLeftParallel() {
@@ -101,23 +86,21 @@ void badLeftParallel() {
     // LED mid: off
     // LED left: on
 
-    LEDSwitch(RightirLedPin, 38000, 1); 
-    LEDSwitch(FrontirLedPin, 38000, 0);
-    LEDSwitch(LeftirLedPin, 38000, 1);
+    displayCode(LED_ON, LED_OFF, LED_ON);
 
     // clockwise
     turnRightXDeg(10);
 
     // straight
     straight();
-    delay(300);
+    delay(50);
 
     // anti-clockwise
     turnLeftXDeg(10);
 
     // backward
-    backward();
-    delay(300);
+    backwardMs(100);
+
 }
 
 void badRight30Deg() {
@@ -125,22 +108,21 @@ void badRight30Deg() {
     // LED mid: on
     // LED left: on
 
-    LEDSwitch(RightirLedPin, 1, 1); // 1 second flash
-    LEDSwitch(FrontirLedPin, 38000, 0);
-    LEDSwitch(LeftirLedPin, 38000, 0);
+    // still needs to flash !!! todo
+    displayCode(LED_FLASH, LED_ON, LED_ON);
 
     turnLeftXDeg(20);
 
     int i = 0;
     while (i < 3) {
         i++;
-        int d0 = irDistanceCm(RightirLedPin, RightirReceiverPin); //distance 
+        int d0 = irDistanceCm(RightredLedPin, RightirReceiverPin); //distance 
 
         straight();
-        delay(400); // move straight to test if we get closer to the right wall, if we do then we need to do larger turn
+        delay(100); // move straight to test if we get closer to the right wall, if we do then we need to do larger turn
 
-        int d1 = irDistanceCm(RightirLedPin, RightirReceiverPin);
-        int front = irDistanceCm(FrontirLedPin, FrontirReceiverPin);
+        int d1 = irDistanceCm(RightredLedPin, RightirReceiverPin);
+        int front = irDistanceCm(FrontredLedPin, FrontirReceiverPin);
 
         if (front <= 5) {  
             turnLeftXDeg(15);
@@ -153,8 +135,7 @@ void badRight30Deg() {
 
     }
 
-    straight();
-    delay(1500); // 1.5 seconds but will need checking
+    forwardMs(100);
 }
 
 void badLeft30Deg() {
@@ -162,22 +143,20 @@ void badLeft30Deg() {
     // LED mid: on
     // LED left: on
 
-    LEDSwitch(RightirLedPin, 38000, 1); 
-    LEDSwitch(FrontirLedPin, 38000, 1);
-    LEDSwitch(LeftirLedPin, 38000, 1);
+    displayCode(LED_ON, LED_ON, LED_ON);
 
     turnRightXDeg(20);
 
     int i = 0;
     while (i < 3) {
         i++;
-        int d0 = irDistanceCm(LeftirLedPin, LeftirReceiverPin); //distance 
+        int d0 = irDistanceCm(LeftredLedPin, LeftirReceiverPin); //distance 
 
         straight();
-        delay(400); // move straight to test if we get closer to the right wall, if we do then we need to do larger turn
+        delay(100); // move straight to test if we get closer to the right wall, if we do then we need to do larger turn
 
-        int d1 = irDistanceCm(LeftirLedPin, LeftirReceiverPin);
-        int front = irDistanceCm(FrontirLedPin, FrontirReceiverPin);
+        int d1 = irDistanceCm(LeftredLedPin, LeftirReceiverPin);
+        int front = irDistanceCm(FrontredLedPin, FrontirReceiverPin);
 
         if (front <= 5) {  
             turnRightXDeg(15);
@@ -190,6 +169,34 @@ void badLeft30Deg() {
 
     }
 
-    straight();
-    delay(1500); // 1.5 seconds but will need checking
+    forwardMs(100);
+}
+
+
+// facing into a corner (right turn)
+// close front, close left, no right 
+void ownChoice1() {
+    displayCode(LED_OFF, LED_FLASH, LED_OFF);
+
+    backwardMs(100);
+
+    turnRightXDeg(135);
+
+    forwardMs(100);
+}
+
+//parallel to a left turn corner
+// nothing on left, long wall on right, wall in front but not in boundary
+void ownChoice2() {
+    displayCode(LED_FLASH, LED_FLASH, LED_OFF);
+
+    int dF = irDistanceCm(FrontredLedPin, FrontirReceiverPin);
+    while (dF > FRONT_TURN_MAX) {
+        forwardMs(100);
+        dF = irDistanceCm(FrontredLedPin, FrontirReceiverPin);
+    }
+
+    turnLeftXDeg(90);
+
+    forwardMs(100);
 }

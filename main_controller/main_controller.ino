@@ -3,17 +3,14 @@
 #include <Arduino.h>
 #include <Servo.h>
 
-// constants 
-const int min_front_turn = 3;
-const int max_front_turn = 8;
 
 Servo servoLeft;
 Servo servoRight;
 
 void setup() {
   Serial.begin(9600);
-  servoLeft.attach(9); 
-  servoRight.attach(5); 
+  servoLeft.attach(servoLeftPin); 
+  servoRight.attach(servoRightPin); 
 
   pinMode(LeftirReceiverPin, INPUT);
   pinMode(FrontirReceiverPin, INPUT);
@@ -29,28 +26,59 @@ void setup() {
 // still need to create our own scenarios 
 
 void loop() {
-  delay(3000);
-  straight();
-  delay(10000);
-
   int dF = irDistanceCm(FrontirLedPin, FrontirReceiverPin);
   int dL = irDistanceCm(LeftirLedPin,  LeftirReceiverPin);
   int dR = irDistanceCm(RightirLedPin, RightirReceiverPin);
-  Serial.println(dF);
-  Serial.println(dL);
-  Serial.println(dR);
+  Serial.print("F:");  Serial.print(dF);
+  Serial.print(" L:"); Serial.print(dL);
+  Serial.print(" R:"); Serial.println(dR);
 
-  if (dF > 7 && dL > 6 && dR < 4)               badRightParallel();
-  else if (dF > 7 && dL < 4 && dR > 6)          badLeftParallel();
-  else if (dF < 5 && dL > 6 && dR < 4)          badRight30Deg();
-  else if (dF < 5 && dL < 4 && dR > 6)          badLeft30Deg();
-  else if (dF < max_front_turn && dL < 8 && dR < 8) deadEnd();
-  else if (dF < max_front_turn && dL < 8 && dR > 10) idealRightTurn();
-  else if (dF < max_front_turn && dL > 10 && dR < 8) idealLeftTurn();
-  else if (dF > 7 && dL > 4 && dL < 7 && dR > 4 && dR < 7) middleLongCorridor();
-  else unknown();
+  // is there a wall
+  bool leftWall = dL < OPEN; 
+  bool rightWall = dR < OPEN;
+  bool frontClear = dF >= FRONT_CLEAR;
+  bool frontTurn = dF >= FRONT_TURN_MIN && dF <= FRONT_TURN_MAX;
 
-  delay(2000);
+
+  if (frontTurn) {
+    if (leftWall && rightWall) {
+      deadEnd();
+    } else if (leftWall) {  // right side open
+      if (angledInto(LeftirLedPin, LeftirReceiverPin)) badLeft30Deg();
+      else idealRightTurn();
+    } else if (rightWall) { // left side open
+      if (angledInto(RightirLedPin, RightirReceiverPin)) badRight30Deg();
+      else  idealLeftTurn();
+    } else {
+      unknown();
+    }
+  }
+
+  else if (frontClear) {
+    if (leftWall && rightWall && abs(dL - dR) <= SIDE_DIFF) {
+      middleLongCorridor();
+    }
+    // closer to one wall we make adjustements
+    else if (leftWall && dL < dR && (rightWall || dL <= NEAR)) {
+      if (angledInto(LeftirLedPin, LeftirReceiverPin)) badLeft30Deg();
+      else  badLeftParallel();
+    }
+    else if (rightWall && dR < dL && (leftWall || dR <= NEAR)) {
+      if (angledInto(RightirLedPin, RightirReceiverPin)) badRight30Deg();
+      else badRightParallel();
+    }
+    else {
+      unknown();
+    }
+  }
+
+  else if (dF < FRONT_TURN_MIN) {
+    if (dL < dR) badLeft30Deg();
+    else if (dR < dL) badRight30Deg();
+    else  unknown();
+  }
+ 
+  else {
+    unknown();
+  }
 }
-
-

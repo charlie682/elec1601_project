@@ -88,6 +88,7 @@ void setup() {
   pinMode(leftLedPin, OUTPUT);
   pinMode(midLedPin, OUTPUT);
   pinMode(rightLedPin, OUTPUT);
+  
   digitalWrite(leftLedPin, LOW);
   digitalWrite(midLedPin, LOW);
   digitalWrite(rightLedPin, LOW);

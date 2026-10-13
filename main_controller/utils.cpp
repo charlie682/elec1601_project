@@ -1,8 +1,23 @@
 #include "utils.hpp"
 #include "essential_modules.hpp"
 
-// IR distance  
 
+void displayCode(LedMode r, LedMode m, LedMode l) {
+  stop();                                   // wheels stopped before the pause
+  for (int i = 0; i < 6; i++) {             // 6 s total; flashing LEDs toggle every 1 s
+    bool phase = (i % 2 == 0);
+    digitalWrite(RightredLedPin, r == LED_ON || (r == LED_FLASH && phase));
+    digitalWrite(FrontredLedPin, m == LED_ON || (m == LED_FLASH && phase));
+    digitalWrite(LeftredLedPin,  l == LED_ON || (l == LED_FLASH && phase));
+    delay(1000);
+  }
+}
+
+
+void forwardMs(int ms)  { straight(); delay(ms); stop(); }
+void backwardMs(int ms) { backward(); delay(ms); stop(); }
+
+// IR distance  
 int irDetect(int irLedPin, int irReceiverPin, long frequency)
 {
   tone(irLedPin, frequency);                 // Turn on the IR LED square wave
@@ -58,13 +73,25 @@ int irDistanceCm(int irLedPin, int irReceiverPin)
   return FAR_DIST;
 }
 
+// check if angled
+bool angledInto(int irLed, int irRx) {
+  int before = irDistanceCm(irLed, irRx);
+  backward(); delay(PROBE_MS); stop();
+  int after = irDistanceCm(irLed, irRx);
+  straight(); delay(PROBE_MS); stop();  // drive back to where we were
+
+  Serial.print("probe: "); Serial.print(before);
+  Serial.print(" -> ");    Serial.println(after);
+  return (after - before) >= PROBE_CHANGE;
+}
+
 // LED controls 
 
 void LEDSwitch(int irLedPin, long frequency, int state) {
     if (state) {
-        tone(irLedPin, frequency); 
+        digitalWrite(irLedPin, HIGH); 
     } else {
-        noTone(irLedPin);
+        digitalWrite(irLedPin, LOW);
     }
 }
 
@@ -74,7 +101,7 @@ void turnRightXDeg(int deg){
   servoLeft.writeMicroseconds(1525);
   servoRight.writeMicroseconds(1525);
 
-  long time = (long)deg * 5175 / 360;   // multiply before dividing
+  long time = (long)deg * 5100 / 360;   // multiply before dividing
   delay(time);
   stop();
 }
@@ -83,19 +110,19 @@ void turnLeftXDeg(int deg){
   servoLeft.writeMicroseconds(1450); // NEEDS CHANGING and fixing!
   servoRight.writeMicroseconds(1450);
 
-  long time = (long)deg * 5175 / 360;   // multiply before dividing
+  long time = (long)deg * 4800 / 360;   // multiply before dividing
   delay(time);
   stop();
 }
 
 void straight(){
-  servoLeft.writeMicroseconds(1375);
-  servoRight.writeMicroseconds(1600);
+  servoLeft.writeMicroseconds(1600);
+  servoRight.writeMicroseconds(1375);
 }
 
 void backward() {
-  servoLeft.writeMicroseconds(1600);
-  servoRight.writeMicroseconds(1375);
+  servoLeft.writeMicroseconds(1375);
+  servoRight.writeMicroseconds(1600);
 }
 
 void stop(){
