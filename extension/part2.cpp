@@ -36,8 +36,8 @@ static void setState(State s) {
 // start a spin; part2Step() ends it once turnTime has passed
 static void startTurn(bool right, int deg) {
     turnTime = spinMs(deg, right);
-    if (right) spinRight();
-    else       spinLeft();
+    if (right) rotateRight();
+    else       rotateLeft();
     setState(TURNING);
 }
 
@@ -80,8 +80,7 @@ void part2Step() {
     }
 
     readSensors();
-    showWalls();
-    printSensors(STATE_NAME[state]);
+    displayLEDwall();
 
     bool leftWall  = dL < OPEN;
     bool rightWall = dR < OPEN;

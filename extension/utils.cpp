@@ -2,7 +2,6 @@
 
 int dF = FAR_DIST, dL = FAR_DIST, dR = FAR_DIST;
 
-// ================= IR (copied from main_controller) =================
 
 int irDetect(int irLedPin, int irReceiverPin, long frequency)
 {
@@ -66,21 +65,13 @@ void readSensors() {
   dR = irDistanceCm(RightirLedPin, RightirReceiverPin);
 }
 
-void printSensors(const char* tag) {
-  Serial.print("F:");  Serial.print(dF);
-  Serial.print(" L:"); Serial.print(dL);
-  Serial.print(" R:"); Serial.print(dR);
-  Serial.print("  ");  Serial.println(tag);
-}
 
-// red LED on = that sensor sees a wall (handy for debugging on the maze)
-void showWalls() {
+void displayLEDwall() {
   digitalWrite(LeftredLedPin,  dL < OPEN);
   digitalWrite(FrontredLedPin, dF <= FRONT_TURN_MAX);
   digitalWrite(RightredLedPin, dR < OPEN);
 }
 
-// ================= servo controls =================
 
 void straight() {
   servoLeft.writeMicroseconds(LEFT_FWD_US);
@@ -108,41 +99,42 @@ void veerRight() {
   servoRight.writeMicroseconds(RIGHT_FWD_US + STEER);
 }
 
-// spin on the spot (same values as turnLeftXDeg / turnRightXDeg in main_controller)
-void spinLeft() {
-  servoLeft.writeMicroseconds(1455);
-  servoRight.writeMicroseconds(1455);
-}
 
-void spinRight() {
-  servoLeft.writeMicroseconds(1525);
-  servoRight.writeMicroseconds(1525);
-}
-
-// how long to spin for a given angle
 long spinMs(int deg, bool right) {
   return (long)deg * (right ? RIGHT_SPIN_MS : LEFT_SPIN_MS) / 360;
 }
 
-// keep centred while driving, using whatever side walls we can see.
-// err > 0 means we are too close to the LEFT wall.
+// to keep centered while driving
 void steer() {
   bool leftWall  = dL < OPEN;
   bool rightWall = dR < OPEN;
   int err = 0;
 
-  if (leftWall && rightWall) err = dR - dL;        // centre between both walls
-  else if (leftWall)         err = WALL_CM - dL;   // only left wall: hold WALL_CM from it
-  else if (rightWall)        err = dR - WALL_CM;   // only right wall: hold WALL_CM from it
+  if (leftWall && rightWall) err = dR - dL;       
+  else if (leftWall)         err = WALL_CM - dL;   
+  else if (rightWall)        err = dR - WALL_CM;  
 
-  if (err >= SIDE_DIFF)       veerRight();
-  else if (err <= -SIDE_DIFF) veerLeft();
-  else                        straight();
+  if (err >= SIDE_DIFFERENCE) veerRight(); // closer to left wall, so turn slightly right
+  else if (err <= -SIDE_DIFFERENCE) veerLeft(); // closer to right wall, so turn slightly left 
+  else straight(); // else go straight
 }
 
-// blocking moves (same as main_controller)
+
 void forwardMs(int ms)  { straight(); delay(ms); stop(); }
 void backwardMs(int ms) { backward(); delay(ms); stop(); }
 
-void turnRightXDeg(int deg) { spinRight(); delay(spinMs(deg, true));  stop(); }
-void turnLeftXDeg(int deg)  { spinLeft();  delay(spinMs(deg, false)); stop(); }
+void turnRightXDeg(int deg) { rotateRight(); delay(spinMs(deg, true));  stop(); }
+void turnLeftXDeg(int deg)  { rotateLeft();  delay(spinMs(deg, false)); stop(); }
+
+
+
+
+void rotateLeft() {
+  servoLeft.writeMicroseconds(1455);
+  servoRight.writeMicroseconds(1455);
+}
+
+void rotateRight() {
+  servoLeft.writeMicroseconds(1525);
+  servoRight.writeMicroseconds(1525);
+}

@@ -7,7 +7,6 @@
 extern Servo servoLeft;
 extern Servo servoRight;
 
-// ================= copied from main_controller (same pins + calibration) =================
 
 // pins
 const int FrontirLedPin=6, FrontirReceiverPin=7;
@@ -36,7 +35,7 @@ const int FAR_DIST = 99;       // returned when we dont detect any wall
 // for classification
 const int NEAR = 3;            // shortest dist
 const int OPEN = 10;           // bigger than 10 is open wall
-const int SIDE_DIFF = 2;       // difference that counts as "off centre"
+const int SIDE_DIFFERENCE = 2;       // difference that counts as "off centre"
 const int FRONT_CLEAR = 10;    // move forward in open path
 const int FRONT_TURN_MIN = 3;  // wall ahead at turning distance
 const int FRONT_TURN_MAX = 8;  // between 3 and 8 cm
@@ -60,7 +59,7 @@ int  irDetect(int irLedPin, int irReceiverPin, long frequency);
 int  irDistanceCm(int irLedPin, int irReceiverPin);
 void readSensors();
 void printSensors(const char* tag);
-void showWalls();
+void displayLEDwall();
 
 // wheels - these just set the servos and return (no delay)
 void straight();
@@ -68,8 +67,8 @@ void backward();
 void stop();
 void veerLeft();
 void veerRight();
-void spinLeft();
-void spinRight();
+void rotateLeft();
+void rotateRight();
 void steer();
 long spinMs(int deg, bool right);
 
