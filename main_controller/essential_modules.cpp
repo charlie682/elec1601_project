@@ -18,7 +18,7 @@ void middleLongCorridor() {
 
     displayCode(LED_ON, LED_OFF, LED_OFF);
 
-    forwardMs(300);
+    forwardMs(600);
 }
 
 void idealLeftTurn() {
@@ -30,7 +30,7 @@ void idealLeftTurn() {
 
     turnLeftXDeg(90);
 
-    forwardMs(300); 
+    forwardMs(800); 
 }
 
 
@@ -44,7 +44,7 @@ void idealRightTurn() {
 
     turnRightXDeg(90);
 
-    forwardMs(300);
+    forwardMs(800);
 }
 
 void deadEnd() {
@@ -55,9 +55,9 @@ void deadEnd() {
     displayCode(LED_OFF, LED_OFF, LED_ON);
 
 
-    turnRightXDeg(180);
+    turnRightXDeg(190);
 
-    forwardMs(330); 
+    forwardMs(600); 
 }
 
 void badRightParallel() {
@@ -67,18 +67,17 @@ void badRightParallel() {
 
     displayCode(LED_OFF, LED_ON, LED_ON);
 
-    // clockwise
-    turnLeftXDeg(10);
+    // anti clockwise
+    turnLeftXDeg(20);
 
     // straight
-    straight();
-    delay(50);
+    forwardMs(500);
 
-    // anti-clockwise
-    turnRightXDeg(10);
+    // clockwise
+    turnRightXDeg(20);
 
     // backward
-    backwardMs(100);   
+    backwardMs(200);   
 }
 
 void badLeftParallel() {
@@ -89,17 +88,16 @@ void badLeftParallel() {
     displayCode(LED_ON, LED_OFF, LED_ON);
 
     // clockwise
-    turnRightXDeg(10);
+    turnRightXDeg(20);
 
     // straight
-    straight();
-    delay(50);
+    forwardMs(500);
 
     // anti-clockwise
-    turnLeftXDeg(10);
+    turnLeftXDeg(20);
 
     // backward
-    backwardMs(100);
+    backwardMs(200);
 
 }
 
@@ -111,31 +109,43 @@ void badRight30Deg() {
     // still needs to flash !!! todo
     displayCode(LED_FLASH, LED_ON, LED_ON);
 
+    turnLeftXDeg(30);
+
+    // anti clockwise
     turnLeftXDeg(20);
 
-    int i = 0;
-    while (i < 3) {
-        i++;
-        int d0 = irDistanceCm(RightredLedPin, RightirReceiverPin); //distance 
+    // straight
+    forwardMs(500);
 
-        straight();
-        delay(100); // move straight to test if we get closer to the right wall, if we do then we need to do larger turn
+    // clockwise
+    turnRightXDeg(20);
 
-        int d1 = irDistanceCm(RightredLedPin, RightirReceiverPin);
-        int front = irDistanceCm(FrontredLedPin, FrontirReceiverPin);
+    // backward
+    backwardMs(200);
 
-        if (front <= 5) {  
-            turnLeftXDeg(15);
-            continue;
-        }
+    // int i = 0;
+    // while (i < 3) {
+    //     i++;
+    //     int d0 = irDistanceCm(RightredLedPin, RightirReceiverPin); //distance 
 
-        if (d1 - d0 < -1) turnLeftXDeg(8); // still angled towards right
-        else if (d1 - d0 > 1) turnRightXDeg(8); // over angled
-        else break; // essentially parallel 
+    //     straight();
+    //     delay(100); // move straight to test if we get closer to the right wall, if we do then we need to do larger turn
 
-    }
+    //     int d1 = irDistanceCm(RightredLedPin, RightirReceiverPin);
+    //     int front = irDistanceCm(FrontredLedPin, FrontirReceiverPin);
 
-    forwardMs(100);
+    //     if (front <= 5) {  
+    //         turnLeftXDeg(15);
+    //         continue;
+    //     }
+
+    //     if (d1 - d0 < -1) turnLeftXDeg(8); // still angled towards right
+    //     else if (d1 - d0 > 1) turnRightXDeg(8); // over angled
+    //     else break; // essentially parallel 
+
+    // }
+
+    // forwardMs(100);
 }
 
 void badLeft30Deg() {
@@ -145,58 +155,62 @@ void badLeft30Deg() {
 
     displayCode(LED_ON, LED_ON, LED_ON);
 
+    turnRightXDeg(30);
+
+    // clockwise
     turnRightXDeg(20);
 
-    int i = 0;
-    while (i < 3) {
-        i++;
-        int d0 = irDistanceCm(LeftredLedPin, LeftirReceiverPin); //distance 
+    // straight
+    forwardMs(500);
 
-        straight();
-        delay(100); // move straight to test if we get closer to the right wall, if we do then we need to do larger turn
+    // anti-clockwise
+    turnLeftXDeg(20);
 
-        int d1 = irDistanceCm(LeftredLedPin, LeftirReceiverPin);
-        int front = irDistanceCm(FrontredLedPin, FrontirReceiverPin);
+    // backward
+    backwardMs(200);
 
-        if (front <= 5) {  
-            turnRightXDeg(15);
-            continue;
-        }
+    // int i = 0;
+    // while (i < 3) {
+    //     i++;
+    //     int d0 = irDistanceCm(LeftredLedPin, LeftirReceiverPin); //distance 
 
-        if (d1 - d0 < -1) turnRightXDeg(8); // still angled towards right
-        else if (d1 - d0 > 1) turnLeftXDeg(8); // over angled
-        else break; // essentially parallel 
+    //     straight();
+    //     delay(100); // move straight to test if we get closer to the right wall, if we do then we need to do larger turn
 
-    }
+    //     int d1 = irDistanceCm(LeftredLedPin, LeftirReceiverPin);
+    //     int front = irDistanceCm(FrontredLedPin, FrontirReceiverPin);
 
-    forwardMs(100);
+    //     if (front <= 5) {  
+    //         turnRightXDeg(15);
+    //         continue;
+    //     }
+
+    //     if (d1 - d0 < -1) turnRightXDeg(8); // still angled towards right
+    //     else if (d1 - d0 > 1) turnLeftXDeg(8); // over angled
+    //     else break; // essentially parallel 
+
+    // }
+
+    // forwardMs(100);
 }
 
-
-// facing into a corner (right turn)
+//  into a corner (right turn)
+// L45000, M43250 R43000
 // close front, close left, no right 
 void ownChoice1() {
     displayCode(LED_OFF, LED_FLASH, LED_OFF);
 
-    backwardMs(100);
+    backwardMs(300);
 
-    turnRightXDeg(135);
-
-    forwardMs(100);
+    turnRightXDeg(55);
 }
+
+// FOR NEXT TIME
 
 //parallel to a left turn corner
 // nothing on left, long wall on right, wall in front but not in boundary
 void ownChoice2() {
     displayCode(LED_FLASH, LED_FLASH, LED_OFF);
 
-    int dF = irDistanceCm(FrontredLedPin, FrontirReceiverPin);
-    while (dF > FRONT_TURN_MAX) {
-        forwardMs(100);
-        dF = irDistanceCm(FrontredLedPin, FrontirReceiverPin);
-    }
-
-    turnLeftXDeg(90);
-
-    forwardMs(100);
+    forwardMs(600);
 }

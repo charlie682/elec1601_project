@@ -37,11 +37,11 @@ const int NEAR = 3;  //shortest dist
 const int OPEN = 10; //bigger than 10 is open wall
 const int SIDE_DIFF = 2; // if the difference is 2, then we are in corridor center
 const int FRONT_CLEAR = 10;  // move forward in open path
-const int FRONT_TURN_MIN = 4;  // wall ahead at turning distance
+const int FRONT_TURN_MIN = 3;  // wall ahead at turning distance
 const int FRONT_TURN_MAX = 8;  // between 4 and 8 cm
-const int PROBE_MS = 100; // for checking parallel/angled (TUNE THIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!)
+const int PROBE_MS = 100; // for checking parallel/angled 
 const int PROBE_CHANGE = 2;  // if side reading grows by >= 2 cm -> angled
-
+const int CORNER_CLOSE = 5;   // corner: front, left and right all at or under this
 
 enum LedMode { LED_OFF, LED_ON, LED_FLASH };
 void displayCode(LedMode r, LedMode m, LedMode l);
@@ -55,7 +55,7 @@ int irDetect(int irLedPin, int irReceiverPin, long frequency);
 
 int irDistanceCm(int irLedPin, int irReceiverPin);
 
-bool angledInto(int irLed, int irRx)
+bool angledInto(int irLed, int irRx);
 
 // LED controls
 

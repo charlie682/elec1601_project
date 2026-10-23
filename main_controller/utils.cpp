@@ -101,16 +101,16 @@ void turnRightXDeg(int deg){
   servoLeft.writeMicroseconds(1525);
   servoRight.writeMicroseconds(1525);
 
-  long time = (long)deg * 5100 / 360;   // multiply before dividing
+  long time = (long)deg * 5100 / 360; 
   delay(time);
   stop();
 }
 
 void turnLeftXDeg(int deg){
-  servoLeft.writeMicroseconds(1450); // NEEDS CHANGING and fixing!
-  servoRight.writeMicroseconds(1450);
+  servoLeft.writeMicroseconds(1455); 
+  servoRight.writeMicroseconds(1455);
 
-  long time = (long)deg * 4800 / 360;   // multiply before dividing
+  long time = (long)deg * 4410 / 360; 
   delay(time);
   stop();
 }

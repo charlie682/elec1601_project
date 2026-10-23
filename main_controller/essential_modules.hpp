@@ -30,8 +30,9 @@ void badRight30Deg();
 
 
 //10 own1 
-
+void ownChoice1();
 //11 own 2
+void ownChoice2();
 
 
 #endif
