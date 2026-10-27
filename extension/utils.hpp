@@ -43,6 +43,9 @@ const int FRONT_TURN_MAX = 8;  // between 3 and 8 cm
 // speeds  or turn rates
 const int  STOP_US = 1490;
 const int  STANDARD_LEFT_FORWARD = 1600, STANDARD_RIGHT_FORWARD = 1375; 
+const long RIGHT_SPIN_MS = 5100;   // ms for a full 360 spinning right
+const long LEFT_SPIN_MS  = 4410;   // ms for a full 360 spinning left
+const int  MS_PER_CM     = 66;     // straight() does 5 cm in 330 ms (stats.txt)
 
 const int WALL_CM = 6;    
 const int STEER = 40;    

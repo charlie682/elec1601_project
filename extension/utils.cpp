@@ -30,13 +30,13 @@ void displayLEDwall() {
 
 
 void straight() {
-  servoLeft.writeMicroseconds(LEFT_FWD_US);
-  servoRight.writeMicroseconds(RIGHT_FWD_US);
+  servoLeft.writeMicroseconds(STANDARD_LEFT_FORWARD);
+  servoRight.writeMicroseconds(STANDARD_RIGHT_FORWARD);
 }
 
 void backward() {
-  servoLeft.writeMicroseconds(RIGHT_FWD_US);
-  servoRight.writeMicroseconds(LEFT_FWD_US);
+  servoLeft.writeMicroseconds(STANDARD_RIGHT_FORWARD);
+  servoRight.writeMicroseconds(STANDARD_LEFT_FORWARD);
 }
 
 void stop() {
@@ -46,17 +46,21 @@ void stop() {
 
 
 void veerLeft() {
-  servoLeft.writeMicroseconds(LEFT_FWD_US - STEER);
-  servoRight.writeMicroseconds(RIGHT_FWD_US);
+  servoLeft.writeMicroseconds(STANDARD_LEFT_FORWARD - STEER);
+  servoRight.writeMicroseconds(STANDARD_RIGHT_FORWARD);
 }
 
 void veerRight() {
-  servoLeft.writeMicroseconds(LEFT_FWD_US);
-  servoRight.writeMicroseconds(RIGHT_FWD_US + STEER);
+  servoLeft.writeMicroseconds(STANDARD_LEFT_FORWARD);
+  servoRight.writeMicroseconds(STANDARD_RIGHT_FORWARD + STEER);
 }
 
 
-// to keep centered while driving
+long spinMs(int deg, bool right) {
+  return (long)deg * (right ? RIGHT_SPIN_MS : LEFT_SPIN_MS) / 360;
+}
+
+
 void steer() {
   bool leftWall  = dL < OPEN;
   bool rightWall = dR < OPEN;
