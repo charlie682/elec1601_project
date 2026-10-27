@@ -1,18 +1,16 @@
 #include "utils.hpp"
 #include "part2.hpp"
 
-const int  CELL_CM    = 20;
 const long OPENING_MS = 600; // drive into the middle of a gap before turning
-const int  TIMES_MEASURED_OPEN = 2; // right side must read open this many times in a row
 const int  FINISH_CM  = 5;
 const unsigned long SETTLE_MS = 150; // stand still before spinning, like part 1 did
 
-enum State {FOLLOW, PRE_TURN, TURNING, FINISH, DONE};
+enum State {STRAIGHT, PRE_TURN, TURNING, FINISH, DONE};
 
 // initial values!
-State state = FOLLOW;
+State state = STRAIGHT;
 unsigned long stateStart  = 0;
-unsigned long timeSinceSideWall = 0;
+unsigned long timeSinceSideWallOpening = 0;
 bool seenRightWall = false;
 int timeMeasuredOpen  = 0;
 unsigned long turnTime = 0; // how long the current spin should last
@@ -24,7 +22,6 @@ static void setState(State s) {
     stateStart = millis();
 }
 
-// stop now; part2Step() starts the spin after SETTLE_MS and ends it after turnTime
 static void turn(bool right, int deg) {
     stop();
     turnRight = right;
@@ -36,14 +33,14 @@ const unsigned long LONG_MIN_MS = 2000; //halfway between long/short
 const unsigned long LONG_MAX_MS = 6000; 
 
 static bool isLongDeadEnd() {
-    unsigned long ms = millis() - timeSinceSideWall;  
+    unsigned long ms = millis() - timeSinceSideWallOpening;  
     return ms > LONG_MIN_MS && ms < LONG_MAX_MS;
 }
 
 void part2Begin() {
-    timeSinceSideWall = millis();
+    timeSinceSideWallOpening = millis();
     straight();
-    setState(FOLLOW);
+    setState(STRAIGHT);
 }
 
 // each step we need to know what the previous state was, hence state machine 
@@ -59,9 +56,9 @@ void part2Step() {
         }
         seenRightWall = false; 
         timeMeasuredOpen = 0;
-        timeSinceSideWall = millis();
+        timeSinceSideWallOpening = millis();
         straight();
-        setState(FOLLOW);
+        setState(STRAIGHT);
         return;
     }
 
@@ -80,10 +77,10 @@ void part2Step() {
     bool rightWall = dR < OPEN;
     bool frontWall = dF <= FRONT_TURN_MAX;
 
-    if (!leftWall || !rightWall) timeSinceSideWall = millis(); //then there is a gap
+    if (!leftWall || !rightWall) timeSinceSideWallOpening = millis(); //then there is a gap
 
     switch (state) {
-        case FOLLOW:
+        case STRAIGHT:
             if (rightWall) {seenRightWall = true; timeMeasuredOpen = 0;}
             else timeMeasuredOpen++;
 
@@ -93,7 +90,7 @@ void part2Step() {
                 else if (isLongDeadEnd()) setState(FINISH); // check if long corridor
                 else turn(dR < dL, 180); // short dead end: 180 towards the closer wall, like part 1 task4
             }
-            else if (seenRightWall && timeMeasuredOpen >= TIMES_MEASURED_OPEN) setState(PRE_TURN); // get ready to turn
+            else if (seenRightWall && timeMeasuredOpen >= 2) setState(PRE_TURN); // get ready to turn
             else steer();
             break;
 

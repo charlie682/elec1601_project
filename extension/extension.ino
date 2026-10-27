@@ -25,7 +25,6 @@ void setup() {
   delay(1000);  
   
   part2Begin();
-  
 }
 
 void loop() {
