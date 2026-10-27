@@ -13,6 +13,87 @@ int irDetect(int irLedPin, int irReceiverPin, long frequency)
   return ir;                                 // Return 0 detect, 1 no detect
 }
 
+
+// one reading of all three sensors into dF, dL, dR (same calls as main_controller's loop)
+void readSensors() {
+  dF = irDistanceCm(FrontirLedPin, FrontirReceiverPin);
+  dL = irDistanceCm(LeftirLedPin,  LeftirReceiverPin);
+  dR = irDistanceCm(RightirLedPin, RightirReceiverPin);
+}
+
+
+void displayLEDwall() {
+  digitalWrite(LeftredLedPin,  dL < OPEN);
+  digitalWrite(FrontredLedPin, dF <= FRONT_TURN_MAX);
+  digitalWrite(RightredLedPin, dR < OPEN);
+}
+
+
+void straight() {
+  servoLeft.writeMicroseconds(LEFT_FWD_US);
+  servoRight.writeMicroseconds(RIGHT_FWD_US);
+}
+
+void backward() {
+  servoLeft.writeMicroseconds(RIGHT_FWD_US);
+  servoRight.writeMicroseconds(LEFT_FWD_US);
+}
+
+void stop() {
+  servoLeft.writeMicroseconds(STOP_US);
+  servoRight.writeMicroseconds(STOP_US);
+}
+
+
+void veerLeft() {
+  servoLeft.writeMicroseconds(LEFT_FWD_US - STEER);
+  servoRight.writeMicroseconds(RIGHT_FWD_US);
+}
+
+void veerRight() {
+  servoLeft.writeMicroseconds(LEFT_FWD_US);
+  servoRight.writeMicroseconds(RIGHT_FWD_US + STEER);
+}
+
+
+// to keep centered while driving
+void steer() {
+  bool leftWall  = dL < OPEN;
+  bool rightWall = dR < OPEN;
+  int err = 0;
+
+  if (leftWall && rightWall) err = dR - dL;       
+  else if (leftWall)         err = WALL_CM - dL;   
+  else if (rightWall)        err = dR - WALL_CM;  
+
+  if (err >= SIDE_DIFFERENCE) veerRight(); // closer to left wall, so turn slightly right
+  else if (err <= -SIDE_DIFFERENCE) veerLeft(); // closer to right wall, so turn slightly left 
+  else straight(); // else go straight
+}
+
+
+void forwardMs(int ms)  { straight(); delay(ms); stop(); }
+void backwardMs(int ms) { backward(); delay(ms); stop(); }
+
+void turnRightXDeg(int deg) { rotateRight(); delay(spinMs(deg, true));  stop(); }
+void turnLeftXDeg(int deg)  { rotateLeft();  delay(spinMs(deg, false)); stop(); }
+
+
+
+
+void rotateLeft() {
+  servoLeft.writeMicroseconds(1455);
+  servoRight.writeMicroseconds(1455);
+}
+
+void rotateRight() {
+  servoLeft.writeMicroseconds(1525);
+  servoRight.writeMicroseconds(1525);
+}
+
+
+
+
 int irDistanceCm(int irLedPin, int irReceiverPin)
 {
   long maxF = 0;
@@ -56,85 +137,4 @@ int irDistanceCm(int irLedPin, int irReceiverPin)
   }
 
   return FAR_DIST;
-}
-
-// one reading of all three sensors into dF, dL, dR (same calls as main_controller's loop)
-void readSensors() {
-  dF = irDistanceCm(FrontirLedPin, FrontirReceiverPin);
-  dL = irDistanceCm(LeftirLedPin,  LeftirReceiverPin);
-  dR = irDistanceCm(RightirLedPin, RightirReceiverPin);
-}
-
-
-void displayLEDwall() {
-  digitalWrite(LeftredLedPin,  dL < OPEN);
-  digitalWrite(FrontredLedPin, dF <= FRONT_TURN_MAX);
-  digitalWrite(RightredLedPin, dR < OPEN);
-}
-
-
-void straight() {
-  servoLeft.writeMicroseconds(LEFT_FWD_US);
-  servoRight.writeMicroseconds(RIGHT_FWD_US);
-}
-
-void backward() {
-  servoLeft.writeMicroseconds(RIGHT_FWD_US);
-  servoRight.writeMicroseconds(LEFT_FWD_US);
-}
-
-void stop() {
-  servoLeft.writeMicroseconds(STOP_US);
-  servoRight.writeMicroseconds(STOP_US);
-}
-
-// gentle curve while still driving forward: slow down the wheel on the side we turn to
-void veerLeft() {
-  servoLeft.writeMicroseconds(LEFT_FWD_US - STEER);
-  servoRight.writeMicroseconds(RIGHT_FWD_US);
-}
-
-void veerRight() {
-  servoLeft.writeMicroseconds(LEFT_FWD_US);
-  servoRight.writeMicroseconds(RIGHT_FWD_US + STEER);
-}
-
-
-long spinMs(int deg, bool right) {
-  return (long)deg * (right ? RIGHT_SPIN_MS : LEFT_SPIN_MS) / 360;
-}
-
-// to keep centered while driving
-void steer() {
-  bool leftWall  = dL < OPEN;
-  bool rightWall = dR < OPEN;
-  int err = 0;
-
-  if (leftWall && rightWall) err = dR - dL;       
-  else if (leftWall)         err = WALL_CM - dL;   
-  else if (rightWall)        err = dR - WALL_CM;  
-
-  if (err >= SIDE_DIFFERENCE) veerRight(); // closer to left wall, so turn slightly right
-  else if (err <= -SIDE_DIFFERENCE) veerLeft(); // closer to right wall, so turn slightly left 
-  else straight(); // else go straight
-}
-
-
-void forwardMs(int ms)  { straight(); delay(ms); stop(); }
-void backwardMs(int ms) { backward(); delay(ms); stop(); }
-
-void turnRightXDeg(int deg) { rotateRight(); delay(spinMs(deg, true));  stop(); }
-void turnLeftXDeg(int deg)  { rotateLeft();  delay(spinMs(deg, false)); stop(); }
-
-
-
-
-void rotateLeft() {
-  servoLeft.writeMicroseconds(1455);
-  servoRight.writeMicroseconds(1455);
-}
-
-void rotateRight() {
-  servoLeft.writeMicroseconds(1525);
-  servoRight.writeMicroseconds(1525);
 }

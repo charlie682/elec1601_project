@@ -1,18 +1,9 @@
 #include "utils.hpp"
 #include "part2.hpp"
 
-// ===================== EXTENSION PART 2 =====================
-// A state machine. Every loop() we read the sensors once, make one decision,
-// set the wheels and return. Anything timed (driving on, spinning) is checked
-// with millis() instead of delay(), so the robot keeps sensing while it moves.
-//
-// Strategy: right-hand rule. Keep the right wall and take every right opening.
-// A maze with no loops gets fully explored this way, so we must reach the long
-// dead end. Short dead ends are spun out of. Works on the mirrored maze as well.
 
-const bool FOLLOW_RIGHT = true;   // false = left-hand rule
 
-// ---- tune these on the real maze ----
+const bool FOLLOW_RIGHT = true;   
 const int  CELL_CM    = 20;    // maze is a 20 x 20 cm grid
 const long OPENING_MS = 600;   // keep driving after our side opens, so we turn in the middle of the gap
 const int  OPEN_READS = 2;     // readings in a row before we trust an opening (ignores one bad IR read)
@@ -22,11 +13,11 @@ enum State { FOLLOW, PRE_TURN, TURNING, FINISH, DONE };
 const char* const STATE_NAME[] = { "FOLLOW", "PRE_TURN", "TURNING", "FINISH", "DONE" };
 
 State state = FOLLOW;
-unsigned long stateStart  = 0;  // millis() when we entered the current state
-unsigned long turnTime    = 0;  // how long the current spin lasts (ms)
-unsigned long walledSince = 0;  // millis() when both sides last became walls = start of this straight
-bool seenOurWall = false;       // seen our wall since the last turn? (so we don't turn back the way we came)
-int  openReads   = 0;           // readings in a row with our wall missing
+unsigned long stateStart  = 0;  
+unsigned long turnTime    = 0;  
+unsigned long walledSince = 0;  
+bool seenOurWall = false;       
+int  openReads   = 0; 
 
 static void setState(State s) {
     state = s;

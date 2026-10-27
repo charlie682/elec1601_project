@@ -8,7 +8,6 @@ static void badLeftParallel() {
     backwardMs(200);     // backward
 }
 
-
 static void badRightParallel() {
     turnLeftXDeg(20);    // anti-clockwise
     forwardMs(500);      // straight
@@ -97,7 +96,7 @@ void task3() {
 void task4() {
     task3();
 
-    if (dL <= dR) {turnLeftXDef(180)}
+    if (dL <= dR) {turnLeftXDeg(180);}
     else {turnRightXDeg(180);}
     task3();
 }
