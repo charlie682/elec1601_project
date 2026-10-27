@@ -48,7 +48,7 @@ const long LEFT_SPIN_MS  = 4410;   // ms for a full 360 spinning left
 const int  MS_PER_CM     = 66;     // straight() does 5 cm in 330 ms (stats.txt)
 
 const int WALL_CM = 6;    
-const int STEER = 40;    
+const int STEER = 60;    
 
 // latest readings, filled in by readSensors()
 extern int dF, dL, dR;
