@@ -57,7 +57,11 @@ void veerRight() {
 
 
 long spinMs(int deg, bool right) {
-  return (long)deg * (right ? RIGHT_SPIN_MS : LEFT_SPIN_MS) / 360;
+  if (right) {
+    return (long)deg * (RIGHT_SPIN_MS) / 360;
+  } else {
+    return (long)deg * (LEFT_SPIN_MS) / 360;
+  }
 }
 
 
