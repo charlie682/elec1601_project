@@ -107,7 +107,7 @@ int irDistanceCm(int irLedPin, int irReceiverPin)
   long maxF = 0;
 
   // Scan from high to low so we get closest dist first
-  for (long f = 49000; f >= 37000; f -= 500)
+  for (long f = 46000; f >= 37000; f -= 500)
   {
     if (irDetect(irLedPin, irReceiverPin, f) == 0)
     {
@@ -145,4 +145,36 @@ int irDistanceCm(int irLedPin, int irReceiverPin)
   }
 
   return FAR_DIST;
+}
+
+
+void badRightParallel() {
+    turnLeftXDeg(20);    // anti clockwise
+    forwardMs(500);      // straight
+    turnRightXDeg(20);   // clockwise
+    backwardMs(200);     // backward
+}
+
+void badLeftParallel() {
+    turnRightXDeg(20);   // clockwise
+    forwardMs(500);      // straight
+    turnLeftXDeg(20);    // anti-clockwise
+    backwardMs(200);     // backward
+}
+
+const int CENTRE_TRIES = 2; 
+const int CENTRE_BACKUP_MS = 300;  //how far it backs up
+
+void centreBeforeTurn() {
+    for (int i = 0; i < CENTRE_TRIES; i++) {
+        readSensors();
+        bool nearLeft  = dL <= NEAR;
+        bool nearRight = dR <= NEAR;
+        if (nearLeft == nearRight) return; 
+
+        backwardMs(CENTRE_BACKUP_MS); 
+        if (nearLeft) badLeftParallel(); // shift right
+        else badRightParallel(); // shift left
+    }
+    readSensors();
 }

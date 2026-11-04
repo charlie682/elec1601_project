@@ -1,19 +1,7 @@
 #include "utils.hpp"
 #include "part1.hpp"
 
-static void badLeftParallel() {
-    turnRightXDeg(20); // clockwise
-    forwardMs(500);      // straight
-    turnLeftXDeg(20);    // anti-clockwise
-    backwardMs(200);     // backward
-}
-
-static void badRightParallel() {
-    turnLeftXDeg(20);    // anti-clockwise
-    forwardMs(500);      // straight
-    turnRightXDeg(20);   // clockwise
-    backwardMs(200);     // backward
-}
+// badLeftParallel / badRightParallel now live in utils.cpp
 
 static void badLeft30Deg() {
     turnRightXDeg(30);   // undo the 30 deg

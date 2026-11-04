@@ -34,6 +34,7 @@ static void setState(State s) {
 
 static void turn(bool right, int deg, State next = STRAIGHT) {
     stop();
+    if (deg == 90) centreBeforeTurn(); // to avoid bumping wall!!!!
     turnRight = right;
     turnTime = spinMs(deg, right);
     afterTurn = next;
@@ -138,7 +139,9 @@ void part2Step() {
                 if (isLongDeadEnd()) setState(FINISH); // found it
                 else {
                     explored++;
-                    if (explored == 1) turn(dR < dL, 180, EXPLORE); // short one: back through the four-way into the left branch
+                    if (explored == 1) {
+                        turn(dR < dL, 180, EXPLORE);
+                    } // short one: back through the four-way into the left branch
                     else { // left was a short dead end too: head back to the four-way following the left wall
                         returning = true;
                         followRight = false;

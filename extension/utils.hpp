@@ -48,7 +48,7 @@ const long LEFT_SPIN_MS  = 4410;   // ms for a full 360 spinning left
 const int  MS_PER_CM     = 66;     // straight() does 5 cm in 330 ms (stats.txt)
 
 const int WALL_CM = 6;    
-const int STEER = 60;    
+const int STEER = 60;  // DECREASED FROM 60 to 40   
 
 // latest readings, filled in by readSensors()
 extern int dF, dL, dR;
@@ -76,5 +76,11 @@ void forwardMs(int ms);
 void backwardMs(int ms);
 void turnRightXDeg(int deg);
 void turnLeftXDeg(int deg);
+
+// essential scenarios 5/6, moved from main_controller/essential_modules.cpp
+void badLeftParallel();
+void badRightParallel();
+// if we're hugging a side wall, shuffle back to the middle before a turn
+void centreBeforeTurn();
 
 #endif
